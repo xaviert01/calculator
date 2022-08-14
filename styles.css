@@ -1,29 +1,116 @@
 @import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
 
+@media only screen and (min-width: 600.01px) {
+
+    body {
+        font-size: 4rem;
+    }
+
+    #calculator {
+        width: 545px;
+        border-radius: 20px;
+        padding: 20px;
+    }
+
+    #screen {
+        height: 125px;
+        line-height: 125px;
+        font-size: 5rem;
+    }
+
+    #buttons-left,
+    #buttons-left-top,
+    #buttons-left-middle,
+    #buttons-left-bottom {
+        gap: 15px;
+    }
+
+    #buttons-right {
+        margin-left: 15px;
+        gap: 15px;
+    }
+
+    #zero {
+        height: 125px;
+        line-height: 125px;
+        border-radius: 62.50px;
+    }
+
+    .button {
+        width: 125px;
+        height: 125px;
+        line-height: 125px;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+
+    body {
+        font-size: 2rem;
+    }
+
+    #calculator {
+        width: 272.50px;
+        border-radius: 10px;
+        padding: 10px;
+    }
+
+    #screen {
+        font-size: 3rem;
+        height: 62.50px;
+        line-height: 162.50px;
+    }
+
+    #buttons-left,
+    #buttons-left-top,
+    #buttons-left-middle,
+    #buttons-left-bottom {
+        gap: 7.50px;
+    }
+
+    #buttons-right {
+        margin-left: 7.50px;
+        gap: 7.50px;
+    }
+
+    #zero {
+        height: 62.50px;
+        line-height: 62.50px;
+        border-radius: 31.25px;
+    }
+
+    .button {
+        width: 62.50px;
+        height: 62.50px;
+        line-height: 62.50px;
+    }
+}
+
+html {
+    font-size: 16px;
+}
+
 body {
     display: flex;
     justify-content: center;
     margin: 0px;
     margin-top: 3vh;
     color: white;
-    font-size: 4rem;
     text-align: center;
     font-family: 'Roboto', sans-serif;
+}
+
+#screen {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    letter-spacing: .1rem;
 }
 
 #calculator {
     display: flex;
     flex-direction: column;
-    width: 545px;
     background-color: black;
-    border-radius: 20px;
-    padding: 20px;
-}
-
-#screen {
-    font-size: 5rem;
-    height: 150px;
-    line-height: 150px;
 }
 
 #buttons {
@@ -34,44 +121,32 @@ body {
     display: flex;
     flex-direction: column;
     width: 75%;
-    gap: 15px;
 }
 
 #buttons-left-top {
     display: flex;
-    gap: 15px;
 }
 
 #buttons-left-middle {
     display: flex;
     flex-wrap: wrap-reverse;
-    gap: 15px;
 }
 
 #buttons-left-bottom {
     display: flex;
-    gap: 15px;
 }
 
 #buttons-right {
     display: flex;
     flex-direction: column;
     width: 25%;
-    margin-left: 15px;
-    gap: 15px;
 }
 
 #zero {
     flex-grow: 1;
-    height: 125px;
-    line-height: 125px;
-    border-radius: 62.50px;
 }
 
 .button {
-    width: 125px;
-    height: 125px;
-    line-height: 125px;
     border-radius: 50%;
 }
 
