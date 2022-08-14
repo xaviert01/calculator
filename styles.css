@@ -1,0 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&display=swap');
+
+body {
+    display: flex;
+    justify-content: center;
+    margin: 0px;
+    margin-top: 3vh;
+    color: white;
+    font-size: 4rem;
+    text-align: center;
+    font-family: 'Roboto', sans-serif;
+}
+
+#calculator {
+    display: flex;
+    flex-direction: column;
+    width: 545px;
+    background-color: black;
+    border-radius: 20px;
+    padding: 20px;
+}
+
+#screen {
+    font-size: 5rem;
+    height: 150px;
+    line-height: 150px;
+}
+
+#buttons {
+    display: flex;
+}
+
+#buttons-left {
+    display: flex;
+    flex-direction: column;
+    width: 75%;
+    gap: 15px;
+}
+
+#buttons-left-top {
+    display: flex;
+    gap: 15px;
+}
+
+#buttons-left-middle {
+    display: flex;
+    flex-wrap: wrap-reverse;
+    gap: 15px;
+}
+
+#buttons-left-bottom {
+    display: flex;
+    gap: 15px;
+}
+
+#buttons-right {
+    display: flex;
+    flex-direction: column;
+    width: 25%;
+    margin-left: 15px;
+    gap: 15px;
+}
+
+#zero {
+    flex-grow: 1;
+    height: 125px;
+    line-height: 125px;
+    border-radius: 62.50px;
+}
+
+.button {
+    width: 125px;
+    height: 125px;
+    line-height: 125px;
+    border-radius: 50%;
+}
+
+.number-modifier {
+    background-color: rgb(171, 171, 171);
+    color: black;
+}
+
+.number {
+    background-color: rgb(80, 80, 80);
+}
+
+.operation {
+    background-color: rgb(254, 157, 0);
+}
+
+.number-modifier:hover {
+    background-color: rgb(206, 205, 205);
+    color: black;
+}
+
+.number:hover {
+    background-color: rgb(132, 132, 132);
+}
+
+.operation:hover {
+    background-color: rgb(255, 184, 91);
+}
+
+#zero {
+    text-align: left;
+}
+
+#zero>span {
+    margin-left: 20%;
+}
