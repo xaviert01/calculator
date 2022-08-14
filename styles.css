@@ -177,9 +177,5 @@ body {
 }
 
 #zero {
-    text-align: left;
-}
-
-#zero>span {
-    margin-left: 20%;
+    text-align: center;
 }

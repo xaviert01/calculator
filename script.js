@@ -20,6 +20,7 @@ const screen = document.querySelector("#screen > span");
 let firstNumber;
 let secondNumber;
 let functionToExecute;
+let error = "";
 
 let calculatorNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
@@ -27,18 +28,18 @@ let addFunction = (a, b) => a + b;
 let subtractFunction = (a, b) => a - b;
 let multiplyFunction = (a, b) => a * b;
 let divideFunction = (a, b) => {
-    let result;
     if (b === 0) {
-        result = "ERROR";
+        setTimeout(reset, 1000);
+        error = "DO NOT DIVIDE BY 0";
     } else {
-        result = a / b;
+        return a / b;
     }
-    return result;
 }
 let reset = () => {
     firstNumber = "";
     secondNumber = "";
     screen.textContent = "";
+    error = "";
     functionToExecute = null;
 }
 
@@ -84,19 +85,44 @@ function numberAfterZeroCheck(number, id) {
     }
 }
 
+function roundNumber(number) {
+    let numberRounded;
+    let roundTo = 8 - Math.floor(number).toString().length;
+    if (roundTo === 0) {
+        numberRounded = Math.round(number);
+    }
+    if (roundTo < 0) {
+        numberRounded = number.toExponential(2);
+    }
+    if (roundTo > 0) {
+        numberRounded = (Math.round((number + Number.EPSILON) * (10 ** roundTo)) / (10 ** roundTo));
+    }
+    return numberRounded;
+}
+
+function shortenNumber(number) {
+    if (number.toString().length > 8) {
+        let numberShortened;
+        numberShortened = number.toExponential(7)
+        return numberShortened
+    } else {
+        return number;
+    }
+}
+
 function operate(e) {
 
     if (!(isNaN(Number(document.getElementById(e.target.id).textContent)))) {
         if (functionToExecute === null) {
             if (zeroCheck(firstNumber, e.target.id) && numberAfterZeroCheck(firstNumber, e.target.id)) {
                 firstNumber += document.getElementById(e.target.id).textContent;
-                screen.textContent = firstNumber;
+                screen.textContent = shortenNumber(Number(firstNumber));
             }
         }
         if (functionToExecute !== null) {
             if (zeroCheck(secondNumber, e.target.id) && numberAfterZeroCheck(secondNumber, e.target.id)) {
                 secondNumber += document.getElementById(e.target.id).textContent;
-                screen.textContent = secondNumber;
+                screen.textContent = shortenNumber(Number(secondNumber));
             }
         }
         return;
@@ -108,16 +134,12 @@ function operate(e) {
             firstNumber = determineFunction();
             secondNumber = "";
             functionToExecute = null;
-            if (!(Number.isInteger(firstNumber))) {
-                let firstNumberRounded = firstNumber.toFixed(2);
-                if (firstNumberRounded.length >= 8) {
-                    firstNumberRounded = Number(firstNumberRounded).toExponential(2);
-                }
-                screen.textContent = firstNumberRounded
+            if (error) {
+                screen.textContent = error;
+            } else {
+                screen.textContent = roundNumber(firstNumber)
             }
-            else {
-                screen.textContent = firstNumber;
-            }
+            firstNumber = firstNumber.toString();
         } else {
             reset();
         }
@@ -129,12 +151,13 @@ function operate(e) {
     }
     if (e.target.id === "plus-minus") {
         if (secondNumber) {
-            secondNumber = (secondNumber * (-1)).toString();
-            screen.textContent = secondNumber;
-
+            secondNumber = (secondNumber * (-1));
+            screen.textContent = shortenNumber(secondNumber);
+            secondNumber = secondNumber.toString();
         } else {
-            firstNumber = (firstNumber * (-1)).toString();
-            screen.textContent = firstNumber;
+            firstNumber = (firstNumber * (-1));
+            screen.textContent = shortenNumber(firstNumber);
+            firstNumber = firstNumber.toString();
         }
         return;
     }
@@ -152,12 +175,14 @@ function operate(e) {
     }
     if (e.target.id === "percent") {
         if (secondNumber) {
-            secondNumber = (secondNumber / 100).toString();
-            screen.textContent = secondNumber;
+            secondNumber = divideFunction(secondNumber, 100);
+            screen.textContent = roundNumber(secondNumber);
+            secondNumber = secondNumber.toString();
 
         } else {
-            firstNumber = (firstNumber / 100).toString();
-            screen.textContent = firstNumber;
+            firstNumber = divideFunction(firstNumber, 100);
+            screen.textContent = roundNumber(firstNumber);
+            firstNumber = firstNumber.toString();
         }
         return;
     }
@@ -167,6 +192,7 @@ function operate(e) {
         }
     }
 }
+
 
 let addListeners = () => {
     document.querySelectorAll("#buttons-left > div > div").forEach(element => {
