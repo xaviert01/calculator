@@ -17,8 +17,8 @@ const subtract = document.getElementById("subtract");
 const add = document.getElementById("add");
 const equals = document.getElementById("equals");
 const screen = document.querySelector("#screen > span");
-let firstNumber = null;
-let secondNumber = null;
+let firstNumber;
+let secondNumber;
 let functionToExecute;
 
 let calculatorNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
@@ -36,9 +36,10 @@ let divideFunction = (a, b) => {
     return result;
 }
 let reset = () => {
-    firstNumber = null;
-    secondNumber = null;
+    firstNumber = "";
+    secondNumber = "";
     screen.textContent = "";
+    functionToExecute = null;
 }
 
 let determineFunction = () => {
@@ -56,28 +57,114 @@ let determineFunction = () => {
     }
 }
 
+function dotCheck(number, id) {
+    let stringArray = Array.from(number);
+    if (id === "dot" && stringArray.some(element => element === ".")) {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function zeroCheck(number, id) {
+    let stringArray = Array.from(number);
+    if (id === "zero" && stringArray.length === 1 && stringArray[0] === "0") {
+        return false;
+    } else {
+        return true;
+    }
+}
+
+function numberAfterZeroCheck(number, id) {
+    let stringArray = Array.from(number);
+    if (stringArray.length === 1 && stringArray[0] === "0" && id !== "dot") {
+        return false;
+    } else {
+        return true;
+    }
+}
+
 function operate(e) {
 
     if (!(isNaN(Number(document.getElementById(e.target.id).textContent)))) {
-        if (firstNumber === null) {
-            firstNumber = Number(document.getElementById(e.target.id).textContent);
-            screen.textContent = firstNumber;
-
+        if (functionToExecute === null) {
+            if (zeroCheck(firstNumber, e.target.id) && numberAfterZeroCheck(firstNumber, e.target.id)) {
+                firstNumber += document.getElementById(e.target.id).textContent;
+                screen.textContent = firstNumber;
+            }
         }
-        if (firstNumber !== null) {
-            secondNumber = Number(document.getElementById(e.target.id).textContent);
-            screen.textContent = secondNumber;
+        if (functionToExecute !== null) {
+            if (zeroCheck(secondNumber, e.target.id) && numberAfterZeroCheck(secondNumber, e.target.id)) {
+                secondNumber += document.getElementById(e.target.id).textContent;
+                screen.textContent = secondNumber;
+            }
         }
         return;
     }
     if (e.target.id === "equals") {
-        firstNumber = determineFunction();
-        screen.textContent = firstNumber;
-        functionToExecute = null;
+        if (firstNumber && secondNumber && functionToExecute !== null) {
+            firstNumber = Number(firstNumber);
+            secondNumber = Number(secondNumber);
+            firstNumber = determineFunction();
+            secondNumber = "";
+            functionToExecute = null;
+            if (!(Number.isInteger(firstNumber))) {
+                let firstNumberRounded = firstNumber.toFixed(2);
+                if (firstNumberRounded.length >= 8) {
+                    firstNumberRounded = Number(firstNumberRounded).toExponential(2);
+                }
+                screen.textContent = firstNumberRounded
+            }
+            else {
+                screen.textContent = firstNumber;
+            }
+        } else {
+            reset();
+        }
+        return;
+    }
+    if (e.target.id === "AC") {
+        reset();
+        return;
+    }
+    if (e.target.id === "plus-minus") {
+        if (secondNumber) {
+            secondNumber = (secondNumber * (-1)).toString();
+            screen.textContent = secondNumber;
+
+        } else {
+            firstNumber = (firstNumber * (-1)).toString();
+            screen.textContent = firstNumber;
+        }
+        return;
+    }
+    if (e.target.id === "dot") {
+        if (secondNumber && dotCheck(secondNumber, e.target.id)) {
+            secondNumber = secondNumber += ".";
+            screen.textContent = secondNumber;
+
+        } else if (dotCheck(firstNumber, e.target.id)) {
+            firstNumber = firstNumber += ".";
+            screen.textContent = firstNumber;
+        }
+
+        return;
+    }
+    if (e.target.id === "percent") {
+        if (secondNumber) {
+            secondNumber = (secondNumber / 100).toString();
+            screen.textContent = secondNumber;
+
+        } else {
+            firstNumber = (firstNumber / 100).toString();
+            screen.textContent = firstNumber;
+        }
         return;
     }
     else {
-        functionToExecute = e.target.id;
+        if (firstNumber && !(secondNumber)) {
+            functionToExecute = e.target.id;
+        }
     }
 }
 
