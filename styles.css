@@ -4,6 +4,11 @@
 
     body {
         font-size: 4rem;
+        gap: 15px;
+    }
+
+    footer {
+        font-size: 1rem;
     }
 
     #calculator {
@@ -15,7 +20,7 @@
     #screen {
         height: 125px;
         line-height: 125px;
-        font-size: 2rem;
+        font-size: 3rem;
     }
 
     #buttons-left,
@@ -41,12 +46,18 @@
         height: 125px;
         line-height: 125px;
     }
+
 }
 
 @media only screen and (max-width: 600px) {
 
     body {
         font-size: 2rem;
+        gap: 7.50px;
+    }
+
+    footer {
+        font-size: 0.75rem;
     }
 
     #calculator {
@@ -56,7 +67,7 @@
     }
 
     #screen {
-        font-size: 1rem;
+        font-size: 2rem;
         height: 62.50px;
         line-height: 162.50px;
     }
@@ -92,7 +103,8 @@ html {
 
 body {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     margin: 0px;
     margin-top: 3vh;
     color: white;
@@ -178,4 +190,8 @@ body {
 
 #zero {
     text-align: center;
+}
+
+footer {
+    color: black;
 }

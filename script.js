@@ -1,28 +1,8 @@
-const AC = document.getElementById("AC");
-const plusMinus = document.getElementById("plus-minus");
-const percent = document.getElementById("percent");
-const zero = document.getElementById("zero");
-const one = document.getElementById("one");
-const two = document.getElementById("two");
-const three = document.getElementById("three");
-const four = document.getElementById("four");
-const five = document.getElementById("five");
-const six = document.getElementById("six");
-const seven = document.getElementById("seven");
-const eight = document.getElementById("eight");
-const nine = document.getElementById("nine");
-const divide = document.getElementById("divide");
-const multiply = document.getElementById("multiply");
-const subtract = document.getElementById("subtract");
-const add = document.getElementById("add");
-const equals = document.getElementById("equals");
 const screen = document.querySelector("#screen > span");
 let firstNumber;
 let secondNumber;
 let functionToExecute;
-let error = "";
-
-let calculatorNumbers = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
+let error;
 
 let addFunction = (a, b) => a + b;
 let subtractFunction = (a, b) => a - b;
@@ -101,9 +81,9 @@ function roundNumber(number) {
 }
 
 function shortenNumber(number) {
-    if (number.toString().length > 8) {
+    if (number.length > 8) {
         let numberShortened;
-        numberShortened = number.toExponential(7)
+        numberShortened = Number(number).toExponential(7)
         return numberShortened
     } else {
         return number;
@@ -116,13 +96,13 @@ function operate(e) {
         if (functionToExecute === null) {
             if (zeroCheck(firstNumber, e.target.id) && numberAfterZeroCheck(firstNumber, e.target.id)) {
                 firstNumber += document.getElementById(e.target.id).textContent;
-                screen.textContent = shortenNumber(Number(firstNumber));
+                screen.textContent = shortenNumber(firstNumber);
             }
         }
         if (functionToExecute !== null) {
             if (zeroCheck(secondNumber, e.target.id) && numberAfterZeroCheck(secondNumber, e.target.id)) {
                 secondNumber += document.getElementById(e.target.id).textContent;
-                screen.textContent = shortenNumber(Number(secondNumber));
+                screen.textContent = shortenNumber(secondNumber);
             }
         }
         return;
@@ -151,13 +131,11 @@ function operate(e) {
     }
     if (e.target.id === "plus-minus") {
         if (secondNumber) {
-            secondNumber = (secondNumber * (-1));
+            secondNumber = (secondNumber * (-1)).toString();
             screen.textContent = shortenNumber(secondNumber);
-            secondNumber = secondNumber.toString();
         } else {
-            firstNumber = (firstNumber * (-1));
+            firstNumber = (firstNumber * (-1)).toString();
             screen.textContent = shortenNumber(firstNumber);
-            firstNumber = firstNumber.toString();
         }
         return;
     }
