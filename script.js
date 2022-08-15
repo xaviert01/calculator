@@ -165,7 +165,6 @@ function removeLastDigit() {
         screen.textContent = shortenNumber(secondNumber);
 
     } else {
-        secondNumber = "";
         functionToExecute = null;
         memory.textContent = "";
         if (firstNumber) {
@@ -197,7 +196,7 @@ function appendDigitKeyboard(key) {
         firstNumber += key;
         screen.textContent = shortenNumber(firstNumber);
     }
-    if (functionToExecute !== null && zeroCheck(secondNumber)) {
+    else if (functionToExecute !== null && zeroCheck(secondNumber)) {
         secondNumber += key;
         screen.textContent = shortenNumber(secondNumber);
         showMemory();
@@ -209,7 +208,7 @@ function appendDigitTouch(id) {
         firstNumber += document.getElementById(id).textContent;
         screen.textContent = shortenNumber(firstNumber);
     }
-    if (functionToExecute !== null && zeroCheck(secondNumber)) {
+    else if (functionToExecute !== null && zeroCheck(secondNumber)) {
         secondNumber += document.getElementById(id).textContent;
         screen.textContent = shortenNumber(secondNumber);
         showMemory();
@@ -221,31 +220,24 @@ function operateTouch(e) {
 
     if (!(isNaN(Number(document.getElementById(e.target.id).textContent)))) {
         appendDigitTouch(e.target.id);
-        return;
     }
-    if (e.target.id === "equals") {
+    else if (e.target.id === "equals") {
         compute();
-        return;
     }
-    if (e.target.id === "AC") {
+    else if (e.target.id === "AC") {
         reset();
-        return;
     }
-    if (e.target.id === "plus-minus") {
+    else if (e.target.id === "plus-minus") {
         switchPlusMinus();
-        return;
     }
-    if (e.target.id === "dot") {
+    else if (e.target.id === "dot") {
         addDot()
-        return;
     }
-    if (e.target.id === "percent") {
+    else if (e.target.id === "percent") {
         toPercent();
-        return;
     }
-    if (e.target.id === "backspace") {
+    else if (e.target.id === "backspace") {
         removeLastDigit();
-        return;
     }
     else {
         if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
@@ -258,27 +250,21 @@ function operateKeyboard(e) {
 
     if (!(isNaN(Number(e.key)))) {
         appendDigitKeyboard(e.key);
-        return;
     }
-    if (e.key === "=" || e.key === "Enter") {
+    else if (e.key === "=" || e.key === "Enter") {
         compute();
-        return;
     }
-    if (e.key === ".") {
+    else if (e.key === ".") {
         addDot();
-        return;
     }
-    if (e.key === "%") {
+    else if (e.key === "%") {
         toPercent();
-        return;
     }
-    if (e.key === "Backspace") {
+    else if (e.key === "Backspace") {
         removeLastDigit();
-        return;
     }
-    if (e.key === "Escape") {
+    else if (e.key === "Escape") {
         reset();
-        return;
     }
     else {
         if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
