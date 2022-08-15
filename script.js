@@ -90,7 +90,7 @@ function shortenNumber(number) {
     }
 }
 
-function operate(e) {
+function operateTouch(e) {
 
     if (!(isNaN(Number(document.getElementById(e.target.id).textContent)))) {
         if (functionToExecute === null) {
@@ -167,12 +167,12 @@ function operate(e) {
     if (e.target.id === "backspace") {
         if (secondNumber) {
             secondNumber = secondNumber.slice(0, -1);
-            screen.textContent = secondNumber;
+            screen.textContent = shortenNumber(secondNumber);
 
         } else {
             if (firstNumber) {
                 firstNumber = firstNumber.slice(0, -1);
-                screen.textContent = firstNumber;
+                screen.textContent = shortenNumber(firstNumber);
             }
         }
         return;
@@ -184,18 +184,119 @@ function operate(e) {
     }
 }
 
+function operateKey(e) {
 
-let addListeners = () => {
+    if (!(isNaN(Number(e.key)))) {
+        if (functionToExecute === null) {
+            if (zeroCheck(firstNumber, e.key) && numberAfterZeroCheck(firstNumber, e.key)) {
+                firstNumber += e.key;
+                screen.textContent = shortenNumber(firstNumber);
+            }
+        }
+        if (functionToExecute !== null) {
+            if (zeroCheck(secondNumber, e.key) && numberAfterZeroCheck(secondNumber, e.key)) {
+                secondNumber += e.key;
+                screen.textContent = shortenNumber(secondNumber);
+            }
+        }
+        return;
+    }
+    if (e.key === "=") {
+        if (firstNumber && secondNumber && functionToExecute !== null) {
+            firstNumber = Number(firstNumber);
+            secondNumber = Number(secondNumber);
+            firstNumber = determineFunction();
+            secondNumber = "";
+            functionToExecute = null;
+            if (error) {
+                screen.textContent = error;
+            } else {
+                screen.textContent = roundNumber(firstNumber)
+            }
+            firstNumber = firstNumber.toString();
+        } else {
+            reset();
+        }
+        return;
+    }
+    if (e.key === ".") {
+        if (secondNumber && dotCheck(secondNumber, e.key)) {
+            secondNumber = secondNumber += ".";
+            screen.textContent = secondNumber;
+
+        } else if (dotCheck(firstNumber, e.key)) {
+            firstNumber = firstNumber += ".";
+            screen.textContent = firstNumber;
+        }
+
+        return;
+    }
+    if (e.key === "%") {
+        if (secondNumber) {
+            secondNumber = divideFunction(secondNumber, 100);
+            screen.textContent = roundNumber(secondNumber);
+            secondNumber = secondNumber.toString();
+
+        } else {
+            firstNumber = divideFunction(firstNumber, 100);
+            screen.textContent = roundNumber(firstNumber);
+            firstNumber = firstNumber.toString();
+        }
+        return;
+    }
+    if (e.key === "Backspace") {
+        if (secondNumber) {
+            secondNumber = secondNumber.slice(0, -1);
+            screen.textContent = shortenNumber(secondNumber);
+
+        } else {
+            if (firstNumber) {
+                firstNumber = firstNumber.slice(0, -1);
+                screen.textContent = shortenNumber(firstNumber);
+            }
+        }
+        return;
+    }
+    else {
+        if (firstNumber && !(secondNumber)) {
+
+            if (e.key === "+") {
+                functionToExecute = "add";
+            }
+
+            if (e.key === "-") {
+                functionToExecute = "subtract";
+            }
+
+            if (e.key === "*") {
+                functionToExecute = "multiply";
+            }
+
+            if (e.key === "/") {
+                functionToExecute = "divide";
+            }
+        }
+    }
+}
+
+
+let addTouchListeners = () => {
     document.querySelectorAll("#buttons-left > div > div").forEach(element => {
-        element.addEventListener("click", operate)
+        element.addEventListener("click", operateTouch)
     });
     document.querySelectorAll("#buttons-right > div").forEach(element => {
-        element.addEventListener("click", operate);
+        element.addEventListener("click", operateTouch);
     });
 }
 
+let addKeyboardListeners = () => {
+    document.addEventListener("keydown", operateKey);
+}
+
+
 reset();
-addListeners();
+addTouchListeners();
+addKeyboardListeners();
 
 
 
