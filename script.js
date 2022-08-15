@@ -1,4 +1,4 @@
-const screen = document.querySelector("#screen > span");
+const screen = document.querySelector("#screen");
 let firstNumber;
 let secondNumber;
 let functionToExecute;
@@ -10,7 +10,7 @@ let multiplyFunction = (a, b) => a * b;
 let divideFunction = (a, b) => {
     if (b === 0) {
         setTimeout(reset, 1000);
-        error = "DO NOT DIVIDE BY 0";
+        error = "DIVISION BY 0";
     } else {
         return a / b;
     }

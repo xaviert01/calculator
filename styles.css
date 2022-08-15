@@ -69,7 +69,7 @@
     #screen {
         font-size: 2rem;
         height: 62.50px;
-        line-height: 162.50px;
+        line-height: 62.50px;
     }
 
     #buttons-left,
@@ -113,9 +113,10 @@ body {
 }
 
 #screen {
-    display: flex;
+    /*  display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; */
+    text-align: center;
     letter-spacing: .1rem;
 }
 
