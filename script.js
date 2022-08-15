@@ -50,30 +50,26 @@ function showSign() {
             return "*";
         case "divide":
             return "/";
+            break;
     }
 }
 
-function dotCheck(number, id) {
+// Verify if there already is a dot in the number. 
+// Return negative (false) value of check if there is, return positive (true) if there isn't. 
+function dotCheck(number) {
     let stringArray = Array.from(number);
-    if ((id === "dot" || id === ".") && stringArray.some(element => element === ".")) {
+    if (stringArray.some(element => element === ".")) {
         return false;
     } else {
         return true;
     }
 }
 
-function zeroCheck(number, id) {
+// Verify if user wants to append a digit right after "zero" in the beginning of the number (0X, e.g. 02). 
+// Return negative (false) value of check if it's the case, return positive (true) if it isn't. 
+function zeroCheck(number) {
     let stringArray = Array.from(number);
-    if ((id === "zero" || id === "0") && stringArray.length === 1 && stringArray[0] === "0") {
-        return false;
-    } else {
-        return true;
-    }
-}
-
-function numberAfterZeroCheck(number, id) {
-    let stringArray = Array.from(number);
-    if (stringArray.length === 1 && stringArray[0] === "0" && !(id === "dot" || id === ".")) {
+    if (stringArray.length === 1 && stringArray[0] === "0") {
         return false;
     } else {
         return true;
@@ -109,41 +105,91 @@ function showMemory() {
     memory.textContent = shortenNumber(firstNumber) + " " + showSign();
 }
 
+function compute() {
+    if (firstNumber && secondNumber && functionToExecute !== null) {
+        firstNumber = Number(firstNumber);
+        secondNumber = Number(secondNumber);
+        firstNumber = determineFunction();
+        secondNumber = "";
+        functionToExecute = null;
+        memory.textContent = "";
+        if (error) {
+            screen.textContent = error;
+        } else {
+            screen.textContent = roundNumber(firstNumber)
+        }
+        firstNumber = firstNumber.toString();
+    } else {
+        reset();
+    }
+}
+
+function switchPlusMinus() {
+    if (secondNumber && !(isNaN(secondNumber))) {
+        secondNumber = (secondNumber * (-1)).toString();
+        screen.textContent = shortenNumber(secondNumber);
+    } else if (firstNumber && !(isNaN(firstNumber))) {
+        firstNumber = (firstNumber * (-1)).toString();
+        screen.textContent = shortenNumber(firstNumber);
+    }
+}
+
+function addDot() {
+    if (secondNumber && dotCheck(secondNumber)) {
+        secondNumber = secondNumber += ".";
+        screen.textContent = secondNumber;
+
+    } else if (dotCheck(firstNumber) && !(secondNumber)) {
+        firstNumber = firstNumber += ".";
+        screen.textContent = firstNumber;
+    }
+}
+
+function toPercent() {
+    if (secondNumber && !(isNaN(secondNumber))) {
+        secondNumber = divideFunction(secondNumber, 100);
+        screen.textContent = roundNumber(secondNumber);
+        secondNumber = secondNumber.toString();
+
+    } else if (firstNumber && !(isNaN(firstNumber))) {
+        firstNumber = divideFunction(firstNumber, 100);
+        screen.textContent = roundNumber(firstNumber);
+        firstNumber = firstNumber.toString();
+    }
+}
+
+function removeLastDigit() {
+    if (secondNumber) {
+        secondNumber = secondNumber.slice(0, -1);
+        screen.textContent = shortenNumber(secondNumber);
+
+    } else {
+        secondNumber = "";
+        functionToExecute = null;
+        memory.textContent = "";
+        if (firstNumber) {
+            firstNumber = firstNumber.slice(0, -1);
+            screen.textContent = shortenNumber(firstNumber);
+        }
+    }
+}
+
 function operateTouch(e) {
 
     if (!(isNaN(Number(document.getElementById(e.target.id).textContent)))) {
-        if (functionToExecute === null) {
-            if (zeroCheck(firstNumber, e.target.id) && numberAfterZeroCheck(firstNumber, e.target.id)) {
-                firstNumber += document.getElementById(e.target.id).textContent;
-                screen.textContent = shortenNumber(firstNumber);
-            }
+        if (functionToExecute === null && zeroCheck(firstNumber)) {
+            firstNumber += document.getElementById(e.target.id).textContent;
+            screen.textContent = shortenNumber(firstNumber);
         }
-        if (functionToExecute !== null) {
-            if (zeroCheck(secondNumber, e.target.id) && numberAfterZeroCheck(secondNumber, e.target.id)) {
-                secondNumber += document.getElementById(e.target.id).textContent;
-                screen.textContent = shortenNumber(secondNumber);
-                showMemory();
-            }
+        if (functionToExecute !== null && zeroCheck(secondNumber)) {
+            secondNumber += document.getElementById(e.target.id).textContent;
+            screen.textContent = shortenNumber(secondNumber);
+            showMemory();
         }
         return;
     }
     if (e.target.id === "equals") {
-        if (firstNumber && secondNumber && functionToExecute !== null) {
-            firstNumber = Number(firstNumber);
-            secondNumber = Number(secondNumber);
-            firstNumber = determineFunction();
-            secondNumber = "";
-            functionToExecute = null;
-            memory.textContent = "";
-            if (error) {
-                screen.textContent = error;
-            } else {
-                screen.textContent = roundNumber(firstNumber)
-            }
-            firstNumber = firstNumber.toString();
-        } else {
-            reset();
-        }
+        compute();
         return;
     }
     if (e.target.id === "AC") {
@@ -151,54 +197,19 @@ function operateTouch(e) {
         return;
     }
     if (e.target.id === "plus-minus") {
-        if (secondNumber && !(isNaN(secondNumber))) {
-            secondNumber = (secondNumber * (-1)).toString();
-            screen.textContent = shortenNumber(secondNumber);
-        } else if (firstNumber && !(isNaN(firstNumber))) {
-            firstNumber = (firstNumber * (-1)).toString();
-            screen.textContent = shortenNumber(firstNumber);
-        }
+        switchPlusMinus();
         return;
     }
     if (e.target.id === "dot") {
-        if (secondNumber && dotCheck(secondNumber, e.target.id)) {
-            secondNumber = secondNumber += ".";
-            screen.textContent = secondNumber;
-
-        } else if (dotCheck(firstNumber, e.target.id)) {
-            firstNumber = firstNumber += ".";
-            screen.textContent = firstNumber;
-        }
-
+        addDot()
         return;
     }
     if (e.target.id === "percent") {
-        if (secondNumber && !(isNaN(secondNumber))) {
-            secondNumber = divideFunction(secondNumber, 100);
-            screen.textContent = roundNumber(secondNumber);
-            secondNumber = secondNumber.toString();
-
-        } else if (firstNumber && !(isNaN(firstNumber))) {
-            firstNumber = divideFunction(firstNumber, 100);
-            screen.textContent = roundNumber(firstNumber);
-            firstNumber = firstNumber.toString();
-        }
+        toPercent();
         return;
     }
     if (e.target.id === "backspace") {
-        if (secondNumber) {
-            secondNumber = secondNumber.slice(0, -1);
-            screen.textContent = shortenNumber(secondNumber);
-
-        } else {
-            secondNumber = "";
-            functionToExecute = null;
-            memory.textContent = "";
-            if (firstNumber) {
-                firstNumber = firstNumber.slice(0, -1);
-                screen.textContent = shortenNumber(firstNumber);
-            }
-        }
+        removeLastDigit();
         return;
     }
     else {
@@ -208,82 +219,34 @@ function operateTouch(e) {
     }
 }
 
-function operateKey(e) {
+function operateKeyboard(e) {
 
     if (!(isNaN(Number(e.key)))) {
-        if (functionToExecute === null) {
-            if (zeroCheck(firstNumber, e.key) && numberAfterZeroCheck(firstNumber, e.key)) {
-                firstNumber += e.key;
-                screen.textContent = shortenNumber(firstNumber);
-            }
+        if (functionToExecute === null && zeroCheck(firstNumber)) {
+            firstNumber += e.key;
+            screen.textContent = shortenNumber(firstNumber);
         }
-        if (functionToExecute !== null) {
-            if (zeroCheck(secondNumber, e.key) && numberAfterZeroCheck(secondNumber, e.key)) {
-                secondNumber += e.key;
-                screen.textContent = shortenNumber(secondNumber);
-                showMemory();
-            }
+        if (functionToExecute !== null && zeroCheck(secondNumber)) {
+            secondNumber += e.key;
+            screen.textContent = shortenNumber(secondNumber);
+            showMemory();
         }
         return;
     }
     if (e.key === "=" || e.key === "Enter") {
-        if (firstNumber && secondNumber && functionToExecute !== null) {
-            firstNumber = Number(firstNumber);
-            secondNumber = Number(secondNumber);
-            firstNumber = determineFunction();
-            secondNumber = "";
-            functionToExecute = null;
-            memory.textContent = "";
-            if (error) {
-                screen.textContent = error;
-            } else {
-                screen.textContent = roundNumber(firstNumber)
-            }
-            firstNumber = firstNumber.toString();
-        } else {
-            reset();
-        }
+        compute();
         return;
     }
     if (e.key === ".") {
-        if (secondNumber && dotCheck(secondNumber, e.key)) {
-            secondNumber = secondNumber += ".";
-            screen.textContent = secondNumber;
-
-        } else if (dotCheck(firstNumber, e.key)) {
-            firstNumber = firstNumber += ".";
-            screen.textContent = firstNumber;
-        }
-
+        addDot();
         return;
     }
     if (e.key === "%") {
-        if (secondNumber && !(isNaN(secondNumber))) {
-            secondNumber = divideFunction(secondNumber, 100);
-            screen.textContent = roundNumber(secondNumber);
-            secondNumber = secondNumber.toString();
-
-        } else if (firstNumber && !(isNaN(firstNumber))) {
-            firstNumber = divideFunction(firstNumber, 100);
-            screen.textContent = roundNumber(firstNumber);
-            firstNumber = firstNumber.toString();
-        }
+        toPercent();
         return;
     }
     if (e.key === "Backspace") {
-        if (secondNumber) {
-            secondNumber = secondNumber.slice(0, -1);
-            screen.textContent = shortenNumber(secondNumber);
-
-        } else {
-            secondNumber = "";
-            functionToExecute = null;
-            memory.textContent = "";
-            if (firstNumber) {
-                firstNumber = firstNumber.slice(0, -1);
-                screen.textContent = shortenNumber(firstNumber);
-            }
-        }
+        removeLastDigit();
         return;
     }
     if (e.key === "Escape") {
@@ -323,7 +286,7 @@ let addTouchListeners = () => {
 }
 
 let addKeyboardListeners = () => {
-    document.addEventListener("keydown", operateKey);
+    document.addEventListener("keydown", operateKeyboard);
 }
 
 
