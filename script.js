@@ -151,10 +151,10 @@ function operateTouch(e) {
         return;
     }
     if (e.target.id === "plus-minus") {
-        if (secondNumber) {
+        if (secondNumber && !(isNaN(secondNumber))) {
             secondNumber = (secondNumber * (-1)).toString();
             screen.textContent = shortenNumber(secondNumber);
-        } else if (firstNumber) {
+        } else if (firstNumber && !(isNaN(firstNumber))) {
             firstNumber = (firstNumber * (-1)).toString();
             screen.textContent = shortenNumber(firstNumber);
         }
@@ -173,12 +173,12 @@ function operateTouch(e) {
         return;
     }
     if (e.target.id === "percent") {
-        if (secondNumber) {
+        if (secondNumber && !(isNaN(secondNumber))) {
             secondNumber = divideFunction(secondNumber, 100);
             screen.textContent = roundNumber(secondNumber);
             secondNumber = secondNumber.toString();
 
-        } else if (firstNumber) {
+        } else if (firstNumber && !(isNaN(firstNumber))) {
             firstNumber = divideFunction(firstNumber, 100);
             screen.textContent = roundNumber(firstNumber);
             firstNumber = firstNumber.toString();
@@ -202,7 +202,7 @@ function operateTouch(e) {
         return;
     }
     else {
-        if (firstNumber && !(secondNumber)) {
+        if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
             functionToExecute = e.target.id;
         }
     }
@@ -258,12 +258,12 @@ function operateKey(e) {
         return;
     }
     if (e.key === "%") {
-        if (secondNumber) {
+        if (secondNumber && !(isNaN(secondNumber))) {
             secondNumber = divideFunction(secondNumber, 100);
             screen.textContent = roundNumber(secondNumber);
             secondNumber = secondNumber.toString();
 
-        } else if (firstNumber) {
+        } else if (firstNumber && !(isNaN(firstNumber))) {
             firstNumber = divideFunction(firstNumber, 100);
             screen.textContent = roundNumber(firstNumber);
             firstNumber = firstNumber.toString();
@@ -291,7 +291,7 @@ function operateKey(e) {
         return;
     }
     else {
-        if (firstNumber && !(secondNumber)) {
+        if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
 
             if (e.key === "+") {
                 functionToExecute = "add";
