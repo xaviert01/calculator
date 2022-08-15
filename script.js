@@ -16,7 +16,7 @@ let divideFunction = (a, b) => {
         return a / b;
     }
 }
-let reset = () => {
+function reset() {
     firstNumber = "";
     secondNumber = "";
     screen.textContent = "";
@@ -25,18 +25,16 @@ let reset = () => {
     functionToExecute = null;
 }
 
-let determineFunction = () => {
-    if (functionToExecute === "add") {
-        return addFunction(firstNumber, secondNumber);
-    }
-    if (functionToExecute === "subtract") {
-        return subtractFunction(firstNumber, secondNumber);
-    }
-    if (functionToExecute === "multiply") {
-        return multiplyFunction(firstNumber, secondNumber);
-    }
-    if (functionToExecute === "divide") {
-        return divideFunction(firstNumber, secondNumber);
+function determineFunction() {
+    switch (functionToExecute) {
+        case "add":
+            return addFunction(firstNumber, secondNumber);
+        case "subtract":
+            return subtractFunction(firstNumber, secondNumber);
+        case "multiply":
+            return multiplyFunction(firstNumber, secondNumber);
+        case "divide":
+            return divideFunction(firstNumber, secondNumber);
     }
 }
 
@@ -50,7 +48,6 @@ function showSign() {
             return "*";
         case "divide":
             return "/";
-            break;
     }
 }
 
@@ -76,6 +73,9 @@ function zeroCheck(number) {
     }
 }
 
+// Round to nearest integer if a number has 8 digits before a comma,
+// Confert to exponential notation if integer has more than 8 digits before a comma, 
+// Or otherwise round in a way that at most 8 digits are visible (before and after comma, in total).
 function roundNumber(number) {
     let numberRounded;
     let roundTo = 8 - Math.floor(number).toString().length;
@@ -91,6 +91,7 @@ function roundNumber(number) {
     return numberRounded;
 }
 
+// If number has more than 8 digits, confert it to exponential notation.
 function shortenNumber(number) {
     if (number.length > 8) {
         let numberShortened;
@@ -174,18 +175,52 @@ function removeLastDigit() {
     }
 }
 
+function setFunctionToExecute(key) {
+    switch (key) {
+        case "+":
+            functionToExecute = "add";
+            break;
+        case "-":
+            functionToExecute = "subtract";
+            break;
+        case "*":
+            functionToExecute = "multiply";
+            break;
+        case "/":
+            functionToExecute = "divide";
+            break;
+    }
+}
+
+function appendDigitKeyboard(key) {
+    if (functionToExecute === null && zeroCheck(firstNumber)) {
+        firstNumber += key;
+        screen.textContent = shortenNumber(firstNumber);
+    }
+    if (functionToExecute !== null && zeroCheck(secondNumber)) {
+        secondNumber += key;
+        screen.textContent = shortenNumber(secondNumber);
+        showMemory();
+    }
+}
+
+function appendDigitTouch(id) {
+    if (functionToExecute === null && zeroCheck(firstNumber)) {
+        firstNumber += document.getElementById(id).textContent;
+        screen.textContent = shortenNumber(firstNumber);
+    }
+    if (functionToExecute !== null && zeroCheck(secondNumber)) {
+        secondNumber += document.getElementById(id).textContent;
+        screen.textContent = shortenNumber(secondNumber);
+        showMemory();
+    }
+
+}
+
 function operateTouch(e) {
 
     if (!(isNaN(Number(document.getElementById(e.target.id).textContent)))) {
-        if (functionToExecute === null && zeroCheck(firstNumber)) {
-            firstNumber += document.getElementById(e.target.id).textContent;
-            screen.textContent = shortenNumber(firstNumber);
-        }
-        if (functionToExecute !== null && zeroCheck(secondNumber)) {
-            secondNumber += document.getElementById(e.target.id).textContent;
-            screen.textContent = shortenNumber(secondNumber);
-            showMemory();
-        }
+        appendDigitTouch(e.target.id);
         return;
     }
     if (e.target.id === "equals") {
@@ -222,15 +257,7 @@ function operateTouch(e) {
 function operateKeyboard(e) {
 
     if (!(isNaN(Number(e.key)))) {
-        if (functionToExecute === null && zeroCheck(firstNumber)) {
-            firstNumber += e.key;
-            screen.textContent = shortenNumber(firstNumber);
-        }
-        if (functionToExecute !== null && zeroCheck(secondNumber)) {
-            secondNumber += e.key;
-            screen.textContent = shortenNumber(secondNumber);
-            showMemory();
-        }
+        appendDigitKeyboard(e.key);
         return;
     }
     if (e.key === "=" || e.key === "Enter") {
@@ -255,28 +282,12 @@ function operateKeyboard(e) {
     }
     else {
         if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
-
-            if (e.key === "+") {
-                functionToExecute = "add";
-            }
-
-            if (e.key === "-") {
-                functionToExecute = "subtract";
-            }
-
-            if (e.key === "*") {
-                functionToExecute = "multiply";
-            }
-
-            if (e.key === "/") {
-                functionToExecute = "divide";
-            }
+            setFunctionToExecute(e.key);
         }
     }
 }
 
-
-let addTouchListeners = () => {
+function addTouchListeners() {
     document.querySelectorAll("#buttons-left > div > div").forEach(element => {
         element.addEventListener("click", operateTouch)
     });
@@ -285,15 +296,10 @@ let addTouchListeners = () => {
     });
 }
 
-let addKeyboardListeners = () => {
+function addKeyboardListeners() {
     document.addEventListener("keydown", operateKeyboard);
 }
-
 
 reset();
 addTouchListeners();
 addKeyboardListeners();
-
-
-
-
