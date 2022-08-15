@@ -239,12 +239,11 @@ function operateTouch(e) {
     else if (e.target.id === "backspace") {
         removeLastDigit();
     }
-    else {
-        if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
-            functionToExecute = e.target.id;
-        }
+    else if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
+        functionToExecute = e.target.id;
     }
 }
+
 
 function operateKeyboard(e) {
 
@@ -266,12 +265,11 @@ function operateKeyboard(e) {
     else if (e.key === "Escape") {
         reset();
     }
-    else {
-        if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
-            setFunctionToExecute(e.key);
-        }
+    else if (firstNumber && !(isNaN(firstNumber)) && !(secondNumber)) {
+        setFunctionToExecute(e.key);
     }
 }
+
 
 function addTouchListeners() {
     document.querySelectorAll("#buttons-left > div > div").forEach(element => {
