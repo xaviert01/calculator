@@ -164,6 +164,19 @@ function operate(e) {
         }
         return;
     }
+    if (e.target.id === "backspace") {
+        if (secondNumber) {
+            secondNumber = secondNumber.slice(0, -1);
+            screen.textContent = secondNumber;
+
+        } else {
+            if (firstNumber) {
+                firstNumber = firstNumber.slice(0, -1);
+                screen.textContent = firstNumber;
+            }
+        }
+        return;
+    }
     else {
         if (firstNumber && !(secondNumber)) {
             functionToExecute = e.target.id;
