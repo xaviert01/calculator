@@ -17,10 +17,16 @@
         padding: 20px;
     }
 
-    #screen {
+    #current-number {
         height: 125px;
         line-height: 125px;
         font-size: 3rem;
+    }
+
+    #memory {
+        height: 62.5px;
+        line-height: 62.5px;
+        font-size: 1.5rem;
     }
 
     #buttons-left,
@@ -66,10 +72,16 @@
         padding: 10px;
     }
 
-    #screen {
-        font-size: 2rem;
+    #current-number {
         height: 62.50px;
         line-height: 62.50px;
+        font-size: 2rem;
+    }
+
+    #memory {
+        height: 31.25px;
+        line-height: 31.25px;
+        font-size: 1rem;
     }
 
     #buttons-left,
@@ -113,9 +125,8 @@ body {
 }
 
 #screen {
-    /*  display: flex;
-    justify-content: center;
-    align-items: center; */
+    display: flex;
+    flex-direction: column;
     text-align: center;
     letter-spacing: .1rem;
 }

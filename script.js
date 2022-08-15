@@ -1,4 +1,5 @@
-const screen = document.querySelector("#screen");
+const screen = document.querySelector("#current-number");
+const memory = document.querySelector("#memory");
 let firstNumber;
 let secondNumber;
 let functionToExecute;
@@ -19,6 +20,7 @@ let reset = () => {
     firstNumber = "";
     secondNumber = "";
     screen.textContent = "";
+    memory.textContent = "";
     error = "";
     functionToExecute = null;
 }
@@ -35,6 +37,19 @@ let determineFunction = () => {
     }
     if (functionToExecute === "divide") {
         return divideFunction(firstNumber, secondNumber);
+    }
+}
+
+function showSign() {
+    switch (functionToExecute) {
+        case "add":
+            return "+";
+        case "subtract":
+            return "-";
+        case "multiply":
+            return "*";
+        case "divide":
+            return "*";
     }
 }
 
@@ -90,6 +105,10 @@ function shortenNumber(number) {
     }
 }
 
+function showMemory() {
+    memory.textContent = shortenNumber(firstNumber) + " " + showSign();
+}
+
 function operateTouch(e) {
 
     if (!(isNaN(Number(document.getElementById(e.target.id).textContent)))) {
@@ -103,6 +122,7 @@ function operateTouch(e) {
             if (zeroCheck(secondNumber, e.target.id) && numberAfterZeroCheck(secondNumber, e.target.id)) {
                 secondNumber += document.getElementById(e.target.id).textContent;
                 screen.textContent = shortenNumber(secondNumber);
+                showMemory();
             }
         }
         return;
@@ -114,6 +134,7 @@ function operateTouch(e) {
             firstNumber = determineFunction();
             secondNumber = "";
             functionToExecute = null;
+            memory.textContent = "";
             if (error) {
                 screen.textContent = error;
             } else {
