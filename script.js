@@ -49,13 +49,13 @@ function showSign() {
         case "multiply":
             return "*";
         case "divide":
-            return "*";
+            return "/";
     }
 }
 
 function dotCheck(number, id) {
     let stringArray = Array.from(number);
-    if (id === "dot" && stringArray.some(element => element === ".")) {
+    if ((id === "dot" || id === ".") && stringArray.some(element => element === ".")) {
         return false;
     } else {
         return true;
@@ -64,7 +64,7 @@ function dotCheck(number, id) {
 
 function zeroCheck(number, id) {
     let stringArray = Array.from(number);
-    if (id === "zero" && stringArray.length === 1 && stringArray[0] === "0") {
+    if ((id === "zero" || id === "0") && stringArray.length === 1 && stringArray[0] === "0") {
         return false;
     } else {
         return true;
@@ -73,7 +73,7 @@ function zeroCheck(number, id) {
 
 function numberAfterZeroCheck(number, id) {
     let stringArray = Array.from(number);
-    if (stringArray.length === 1 && stringArray[0] === "0" && id !== "dot") {
+    if (stringArray.length === 1 && stringArray[0] === "0" && !(id === "dot" || id === ".")) {
         return false;
     } else {
         return true;
@@ -154,7 +154,7 @@ function operateTouch(e) {
         if (secondNumber) {
             secondNumber = (secondNumber * (-1)).toString();
             screen.textContent = shortenNumber(secondNumber);
-        } else {
+        } else if (firstNumber) {
             firstNumber = (firstNumber * (-1)).toString();
             screen.textContent = shortenNumber(firstNumber);
         }
@@ -178,7 +178,7 @@ function operateTouch(e) {
             screen.textContent = roundNumber(secondNumber);
             secondNumber = secondNumber.toString();
 
-        } else {
+        } else if (firstNumber) {
             firstNumber = divideFunction(firstNumber, 100);
             screen.textContent = roundNumber(firstNumber);
             firstNumber = firstNumber.toString();
@@ -191,6 +191,9 @@ function operateTouch(e) {
             screen.textContent = shortenNumber(secondNumber);
 
         } else {
+            secondNumber = "";
+            functionToExecute = null;
+            memory.textContent = "";
             if (firstNumber) {
                 firstNumber = firstNumber.slice(0, -1);
                 screen.textContent = shortenNumber(firstNumber);
@@ -218,17 +221,19 @@ function operateKey(e) {
             if (zeroCheck(secondNumber, e.key) && numberAfterZeroCheck(secondNumber, e.key)) {
                 secondNumber += e.key;
                 screen.textContent = shortenNumber(secondNumber);
+                showMemory();
             }
         }
         return;
     }
-    if (e.key === "=") {
+    if (e.key === "=" || e.key === "Enter") {
         if (firstNumber && secondNumber && functionToExecute !== null) {
             firstNumber = Number(firstNumber);
             secondNumber = Number(secondNumber);
             firstNumber = determineFunction();
             secondNumber = "";
             functionToExecute = null;
+            memory.textContent = "";
             if (error) {
                 screen.textContent = error;
             } else {
@@ -258,7 +263,7 @@ function operateKey(e) {
             screen.textContent = roundNumber(secondNumber);
             secondNumber = secondNumber.toString();
 
-        } else {
+        } else if (firstNumber) {
             firstNumber = divideFunction(firstNumber, 100);
             screen.textContent = roundNumber(firstNumber);
             firstNumber = firstNumber.toString();
@@ -271,11 +276,18 @@ function operateKey(e) {
             screen.textContent = shortenNumber(secondNumber);
 
         } else {
+            secondNumber = "";
+            functionToExecute = null;
+            memory.textContent = "";
             if (firstNumber) {
                 firstNumber = firstNumber.slice(0, -1);
                 screen.textContent = shortenNumber(firstNumber);
             }
         }
+        return;
+    }
+    if (e.key === "Escape") {
+        reset();
         return;
     }
     else {
